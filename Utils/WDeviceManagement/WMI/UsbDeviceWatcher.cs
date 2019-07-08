@@ -71,15 +71,15 @@ namespace Utils.WDeviceManagement.WMI
             }
         }
 
+        /// <summary>
+        /// 获取UsbDeviceWatcher的实例
+        /// </summary>
         public static UsbDeviceWatcher Instance = new Lazy<UsbDeviceWatcher>(() => new UsbDeviceWatcher()).Value;
 
         /// <summary>
         /// 单例模式
         /// </summary>
-        private UsbDeviceWatcher()
-        {
-
-        }
+        private UsbDeviceWatcher(){}
 
         /// <summary>
         /// 添加USB设备监视
