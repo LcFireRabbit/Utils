@@ -47,6 +47,22 @@ namespace Utils.WDeviceManagement.WMI
             {
                 Match match = Regex.Match(dependent, "VID_([0-9|A-F]{4})&PID_([0-9|A-F]{4})");
 
+                if (match.Success)
+                {
+                    var vid = Convert.ToUInt16(match.Groups[1].Value, 16);
+                    var pid = Convert.ToUInt16(match.Groups[2].Value, 16);
+
+                    PnPEntityInfo[] pnPEntityInfos = UsbDeviceInfo.WhoUsbDevice(vid, pid);
+
+                    for (int i = 0; i < pnPEntityInfos.Length; i++)
+                    {
+                        UsbDeviceInfo.CM_Locate_DevNode(out uint devNode,pnPEntityInfos[i].PNPDeviceID);
+
+                        UsbDeviceInfo.CM_GetParentDevIDByChildDevID(text, out uint ParentDevNode, out string ParentDevID);
+
+                        SetupDi.SetupDiExtension.ChangeDevieState(ParentDevNode);
+                    }
+                }
 
                 //if (UsbDeviceInfo.CM_GetParentDevIDByChildDevID(text, out uint ParentDevNode, out string ParentDevID) != 0
                 //    || UsbDeviceInfo.CM_GetParentDevIDByChildDevNode(ParentDevNode, out uint _, out string ParentDevID2) != 0)
@@ -88,7 +104,7 @@ namespace Utils.WDeviceManagement.WMI
         /// <summary>
         /// 单例模式
         /// </summary>
-        private UsbDeviceWatcher(){}
+        private UsbDeviceWatcher() { }
 
         /// <summary>
         /// 添加USB设备监视
@@ -153,7 +169,7 @@ namespace Utils.WDeviceManagement.WMI
             ///用来判断U盘下线
             //if (text.StartsWith("USBSTOR\\"))
             //{
-                
+
             //}
         }
 

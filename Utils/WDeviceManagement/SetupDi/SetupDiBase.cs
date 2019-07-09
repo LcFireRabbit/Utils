@@ -331,6 +331,13 @@ namespace Utils.WDeviceManagement.SetupDi
         [DllImport(SETUPAPI, CharSet = CharSet.Auto)]
         internal static extern bool SetupDiCallClassInstaller(UInt32 flags, IntPtr deviceInfoSet, [In] ref SP_DEVINFO_DATA deviceInfoData);
 
+        [DllImport("setupapi.dll", SetLastError = true)]
+        internal static extern IntPtr SetupDiCreateDeviceInfoList([In] [MarshalAs(UnmanagedType.LPStruct)] Guid ClassGuid, IntPtr hwndParent);
+
+        [DllImport("setupapi.dll", CharSet = CharSet.Auto)]
+        internal static extern IntPtr SetupDiGetClassDevsEx(IntPtr ClassGuid, [MarshalAs(UnmanagedType.LPTStr)] string Enumerator, IntPtr hwndParent, DIGCF Flags, IntPtr DeviceInfoSet, [MarshalAs(UnmanagedType.LPTStr)] string MachineName, IntPtr Reserved);
+
+
         #endregion
     }
 }

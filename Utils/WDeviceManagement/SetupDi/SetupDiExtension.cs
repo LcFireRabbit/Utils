@@ -96,21 +96,26 @@ namespace Utils.WDeviceManagement.SetupDi
         }
 
         //禁用指定设备
-        public static void ChangeDevieState(string Enumerator)
+        public static void ChangeDevieState(uint devNode)
         {
             IntPtr info = IntPtr.Zero;
             Guid NullGuid = Guid.Empty;
             try
             {
-                info = SetupDiGetClassDevsW(ref NullGuid, Enumerator, IntPtr.Zero, DIGCF.ALLCLASSES);
-
-                if(!ReferenceEquals(info,IntPtr.Zero))
-                {
-
-                }
+                info = SetupDiGetClassDevsW(ref NullGuid, null, IntPtr.Zero, DIGCF.ALLCLASSES);
 
                 SP_DEVINFO_DATA devdata = new SP_DEVINFO_DATA();
                 devdata.cbSize = (UInt32)Marshal.SizeOf(devdata);
+
+                ///遍历设备
+                for (uint i = 0; SetupDiEnumDeviceInfo(info, i, out devdata); i++)
+                {
+                    if (devdata.DevInst == devNode)
+                    {
+
+                    }
+                }
+
             }
             catch (Exception)
             {
