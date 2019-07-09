@@ -17,6 +17,9 @@ namespace Utils
             Dispose();
         }
 
+        /// <summary>
+        /// Usb设备上下线监控方法
+        /// </summary>
         static void UsbMonitor()
         {
             _usbDeviceWatcher = UsbDeviceWatcher.Instance;
@@ -28,16 +31,29 @@ namespace Utils
             _usbDeviceWatcher.USBRemoved += UsbRemovedHandler;
         }
 
+        /// <summary>
+        /// 下线处理事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private static void UsbRemovedHandler(object sender, UsbDeviceWatcher.UsbStorageDeleteEventArgs e)
         {
 
         }
 
+        /// <summary>
+        /// 上线处理事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private static void UsbInsertedHandler(object sender, UsbDeviceWatcher.UsbStorageCreatEventArgs e)
         {
 
         }
 
+        /// <summary>
+        /// 销毁
+        /// </summary>
         static void Dispose()
         {
             _usbDeviceWatcher.Dispose();
