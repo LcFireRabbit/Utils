@@ -3,11 +3,11 @@
 > **Windows设备管理器**
  - USB设备
     - USB设备上线监测(WMI)
-    (```)
+    ```C#
     function(){
-    return a+b;
+    return 123;
     }
-    (```)
+    ```
     - USB上线设备信息查询
  - 设备管理(SetupDi)
     - 查询设备信息
