@@ -61,13 +61,13 @@
             }
             return null;
         }
-    /// <summary>
-    /// 通过得到的设备描述，来查询需要的信息
-    /// </summary>
-    /// <param name="text"></param>
-    /// <param name="dependent"></param>
-    public UsbStorageCreatEventArgs(string text, string dependent)
-            {
+        /// <summary>
+        /// 通过得到的设备描述，来查询需要的信息
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="dependent"></param>
+        public UsbStorageCreatEventArgs(string text, string dependent)
+        {
                 if (UsbDeviceInfo.CM_GetParentDevIDByChildDevID(text, out uint ParentDevNode, out string ParentDevID) != 0
                     || UsbDeviceInfo.CM_GetParentDevIDByChildDevNode(ParentDevNode, out uint _, out string ParentDevID2) != 0)
                 {
@@ -88,7 +88,7 @@
                     ConnectionIndex = num;
                     ServerID = text;
                 }
-            }
+         }
     ```
  - 设备管理(SetupDi)
     - 查询设备信息
