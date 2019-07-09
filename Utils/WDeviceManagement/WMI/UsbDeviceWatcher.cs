@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Management;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Utils.WDeviceManagement.WMI
@@ -37,28 +38,36 @@ namespace Utils.WDeviceManagement.WMI
 
             public string UsbPath { get; set; }
 
+            /// <summary>
+            /// 通过得到的设备描述，来查询需要的信息
+            /// </summary>
+            /// <param name="text"></param>
+            /// <param name="dependent"></param>
             public UsbStorageCreatEventArgs(string text, string dependent)
             {
-                if (UsbDeviceInfo.CM_GetParentDevIDByChildDevID(text, out uint ParentDevNode, out string ParentDevID) != 0
-                    || UsbDeviceInfo.CM_GetParentDevIDByChildDevNode(ParentDevNode, out uint _, out string ParentDevID2) != 0)
-                {
-                    return;
-                }
-                int num = UsbDeviceInfo.CM_GetDevNodeAddress(ParentDevNode);
-                if (num != -1)
-                {
-                    if (text.StartsWith("USBSTOR\\"))
-                    {
-                        StringCollection logicalDiskCollection = UsbDeviceInfo.WMI_GetLogicalDrives(dependent);
-                        UsbPath = logicalDiskCollection[0] + "\\";
-                    }
-                    
-                    UsbDevNode = ParentDevNode;
-                    UsbDevID = ParentDevID;
-                    UsbHubDevID = ParentDevID2;
-                    ConnectionIndex = num;
-                    ServerID = text;
-                }
+                Match match = Regex.Match(dependent, "VID_([0-9|A-F]{4})&PID_([0-9|A-F]{4})");
+
+
+                //if (UsbDeviceInfo.CM_GetParentDevIDByChildDevID(text, out uint ParentDevNode, out string ParentDevID) != 0
+                //    || UsbDeviceInfo.CM_GetParentDevIDByChildDevNode(ParentDevNode, out uint _, out string ParentDevID2) != 0)
+                //{
+                //    return;
+                //}
+                //int num = UsbDeviceInfo.CM_GetDevNodeAddress(ParentDevNode);
+                //if (num != -1)
+                //{
+                //    if (text.StartsWith("USBSTOR\\"))
+                //    {
+                //        StringCollection logicalDiskCollection = UsbDeviceInfo.WMI_GetLogicalDrives(dependent);
+                //        UsbPath = logicalDiskCollection[0] + "\\";
+                //    }
+
+                //    UsbDevNode = ParentDevNode;
+                //    UsbDevID = ParentDevID;
+                //    UsbHubDevID = ParentDevID2;
+                //    ConnectionIndex = num;
+                //    ServerID = text;
+                //}
             }
         }
 
@@ -96,9 +105,12 @@ namespace Utils.WDeviceManagement.WMI
                 _insertWatcher = new ManagementEventWatcher(scope, insert);
                 _removeWatcher = new ManagementEventWatcher(scope, remove);
 
+                ///WMI服务USB加载响应事件
                 _insertWatcher.EventArrived += OnUSBInserted;
+                ///WMI服务USB移除响应事件
                 _removeWatcher.EventArrived += OnUSBRemoved;
 
+                ///开启监听
                 _insertWatcher.Start();
                 _removeWatcher.Start();
 

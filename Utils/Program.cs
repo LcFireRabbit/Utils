@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Utils.WDeviceManagement.SetupDi;
 using Utils.WDeviceManagement.WMI;
-
 namespace Utils
 {
     class Program
@@ -12,7 +12,11 @@ namespace Utils
         {
             UsbMonitor();
 
+            //SetupDiExtension.ChangeMouseState(SetupDiExtension.State.DISABLE);
+
             Console.ReadLine();
+
+            //SetupDiExtension.ChangeMouseState(SetupDiExtension.State.ENABLE);
 
             Dispose();
         }
