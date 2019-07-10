@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Text;
+using Utils.WDeviceManagement.WMI;
 
 namespace Utils.WDeviceManagement.SetupDi
 {
@@ -58,6 +59,14 @@ namespace Utils.WDeviceManagement.SetupDi
                 {
                     if (devdata.ClassGuid == new Guid(Mouse))
                     {
+                        int num2 = 512;
+                        StringBuilder stringBuilder = new StringBuilder(num2);
+                        var result=UsbDeviceInfo.CM_Get_Device_ID(devdata.DevInst, stringBuilder, num2);
+                        if (result == 0)
+                            Console.WriteLine(stringBuilder.ToString());
+
+
+
                         SP_CLASSINSTALL_HEADER header = new SP_CLASSINSTALL_HEADER();
                         header.cbSize = (UInt32)Marshal.SizeOf(header);
                         header.InstallFunction = DIF.PROPERTYCHANGE;
@@ -96,13 +105,13 @@ namespace Utils.WDeviceManagement.SetupDi
         }
 
         //禁用指定设备
-        public static void ChangeDevieState(uint devNode)
+        public static void ChangeDevieState(string pnpDeviceId)
         {
             IntPtr info = IntPtr.Zero;
             Guid NullGuid = Guid.Empty;
             try
             {
-                info = SetupDiGetClassDevsW(ref NullGuid, null, IntPtr.Zero, DIGCF.ALLCLASSES);
+                info = SetupDiGetClassDevsW(ref NullGuid, pnpDeviceId, IntPtr.Zero, DIGCF.DEVICEINTERFACE);
 
                 SP_DEVINFO_DATA devdata = new SP_DEVINFO_DATA();
                 devdata.cbSize = (UInt32)Marshal.SizeOf(devdata);
@@ -110,10 +119,7 @@ namespace Utils.WDeviceManagement.SetupDi
                 ///遍历设备
                 for (uint i = 0; SetupDiEnumDeviceInfo(info, i, out devdata); i++)
                 {
-                    if (devdata.DevInst == devNode)
-                    {
 
-                    }
                 }
 
             }
@@ -133,7 +139,7 @@ namespace Utils.WDeviceManagement.SetupDi
 
 
         /// <summary>
-        /// 得到设备的友好名
+        /// 得到设备某项属性的值
         /// </summary>
         /// <param name="info"></param>
         /// <param name="devdata"></param>

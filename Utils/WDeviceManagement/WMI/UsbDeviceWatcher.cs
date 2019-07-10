@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
+using System.IO;
 using System.Management;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Utils.WDeviceManagement.WMI
 {
@@ -26,17 +23,9 @@ namespace Utils.WDeviceManagement.WMI
 
         public class UsbStorageCreatEventArgs : EventArgs
         {
-            public uint UsbDevNode { get; set; }
+            public string DiskRoot { get; set; }
 
-            public string UsbDevID { get; set; }
-
-            public string UsbHubDevID { get; set; }
-
-            public string ServerID { get; set; }
-
-            public int ConnectionIndex { get; set; }
-
-            public string UsbPath { get; set; }
+            public string InstanceId { get; set; }
 
             /// <summary>
             /// 通过得到的设备描述，来查询需要的信息
@@ -45,45 +34,15 @@ namespace Utils.WDeviceManagement.WMI
             /// <param name="dependent"></param>
             public UsbStorageCreatEventArgs(string text, string dependent)
             {
-                Match match = Regex.Match(dependent, "VID_([0-9|A-F]{4})&PID_([0-9|A-F]{4})");
+                UsbDeviceInfo.CM_Locate_DevNode(out uint pdnDevInst, text);
 
-                if (match.Success)
-                {
-                    var vid = Convert.ToUInt16(match.Groups[1].Value, 16);
-                    var pid = Convert.ToUInt16(match.Groups[2].Value, 16);
+                StringCollection stringCollection =UsbDeviceInfo.WMI_GetDiskRoot(dependent);
 
-                    PnPEntityInfo[] pnPEntityInfos = UsbDeviceInfo.WhoUsbDevice(vid, pid);
-
-                    for (int i = 0; i < pnPEntityInfos.Length; i++)
-                    {
-                        UsbDeviceInfo.CM_Locate_DevNode(out uint devNode,pnPEntityInfos[i].PNPDeviceID);
-
-                        UsbDeviceInfo.CM_GetParentDevIDByChildDevID(text, out uint ParentDevNode, out string ParentDevID);
-
-                        SetupDi.SetupDiExtension.ChangeDevieState(ParentDevNode);
-                    }
-                }
-
-                //if (UsbDeviceInfo.CM_GetParentDevIDByChildDevID(text, out uint ParentDevNode, out string ParentDevID) != 0
-                //    || UsbDeviceInfo.CM_GetParentDevIDByChildDevNode(ParentDevNode, out uint _, out string ParentDevID2) != 0)
-                //{
-                //    return;
-                //}
-                //int num = UsbDeviceInfo.CM_GetDevNodeAddress(ParentDevNode);
-                //if (num != -1)
-                //{
-                //    if (text.StartsWith("USBSTOR\\"))
-                //    {
-                //        StringCollection logicalDiskCollection = UsbDeviceInfo.WMI_GetLogicalDrives(dependent);
-                //        UsbPath = logicalDiskCollection[0] + "\\";
-                //    }
-
-                //    UsbDevNode = ParentDevNode;
-                //    UsbDevID = ParentDevID;
-                //    UsbHubDevID = ParentDevID2;
-                //    ConnectionIndex = num;
-                //    ServerID = text;
-                //}
+                int num2 = 512;
+                StringBuilder stringBuilder = new StringBuilder(num2);
+                var result = UsbDeviceInfo.CM_Get_Device_ID(pdnDevInst, stringBuilder, num2);
+                if (result == 0)
+                    Console.WriteLine(stringBuilder.ToString());
             }
         }
 
@@ -182,12 +141,15 @@ namespace Utils.WDeviceManagement.WMI
         {
             string dependent = UsbDeviceInfo.WhoUsbControllerDevice(e).Dependent;
             string text = dependent.Replace("\\\\", "\\");
-            USBInserted?.Invoke(this, new UsbStorageCreatEventArgs(text, dependent));
 
             ///用来判断U盘上线
-            //if (text.StartsWith("USBSTOR\\"))
-            //{
-            //}
+            if (text.StartsWith("USBSTOR\\"))
+            {
+                DriveType driverType= UsbDeviceInfo.WMI_GetDiskType(dependent);
+
+                USBInserted?.Invoke(this, new UsbStorageCreatEventArgs(text, dependent));
+
+            }
         }
     }
 }

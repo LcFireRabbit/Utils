@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
+using System.IO;
 using System.Management;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Utils.WDeviceManagement.WMI
 {
@@ -361,21 +360,28 @@ namespace Utils.WDeviceManagement.WMI
                 {
                     String thePNPDeviceID = Entity["PNPDeviceID"] as String;
                     Match match = Regex.Match(thePNPDeviceID, "VID_[0-9|A-F]{4}&PID_[0-9|A-F]{4}");
+
+
+                    PnPEntityInfo Element;
+
+                    Element.PNPDeviceID = thePNPDeviceID;                   // 设备ID
+                    Element.Name = Entity["Name"] as String;                // 设备名称
+                    Element.Description = Entity["Description"] as String;  // 设备描述
+                    Element.Service = Entity["Service"] as String;          // 服务
+                    Element.Status = Entity["Status"] as String;            // 设备状态
+                    Element.ClassGuid = new Guid(Entity["ClassGuid"] as String);            // 设备安装类GUID
+
                     if (match.Success)
                     {
-                        PnPEntityInfo Element;
-
-                        Element.PNPDeviceID = thePNPDeviceID;                   // 设备ID
-                        Element.Name = Entity["Name"] as String;                // 设备名称
-                        Element.Description = Entity["Description"] as String;  // 设备描述
-                        Element.Service = Entity["Service"] as String;          // 服务
-                        Element.Status = Entity["Status"] as String;            // 设备状态
                         Element.VendorID = Convert.ToUInt16(match.Value.Substring(4, 4), 16);   // 供应商标识
                         Element.ProductID = Convert.ToUInt16(match.Value.Substring(13, 4), 16); // 产品编号
-                        Element.ClassGuid = new Guid(Entity["ClassGuid"] as String);            // 设备安装类GUID
-
-                        PnPEntities.Add(Element);
                     }
+                    else
+                    {
+                        Element.VendorID = ushort.MinValue;
+                        Element.ProductID = ushort.MinValue;
+                    }
+                    PnPEntities.Add(Element);
                 }
             }
 
@@ -476,7 +482,7 @@ namespace Utils.WDeviceManagement.WMI
         /// </summary>
         /// <param name="PNPDeviceID"></param>
         /// <returns></returns>
-        public static StringCollection WMI_GetLogicalDrives(string PNPDeviceID)
+        public static StringCollection WMI_GetDiskRoot(string PNPDeviceID)
         {
             StringCollection stringCollection = new StringCollection();
             var list = new ManagementObjectSearcher("SELECT * FROM Win32_DiskDrive WHERE PNPDeviceID='" + PNPDeviceID + "'").Get();
@@ -491,6 +497,28 @@ namespace Utils.WDeviceManagement.WMI
                 }
             }
             return stringCollection;
+        }
+
+        /// <summary>
+        /// 得到当前移动存储设备的类型
+        /// </summary>
+        /// <param name="PNPDeviceID"></param>
+        /// <returns></returns>
+        public static DriveType WMI_GetDiskType(string PNPDeviceID)
+        {
+            DriveType driveType=default(DriveType);
+            var list = new ManagementObjectSearcher("SELECT * FROM Win32_DiskDrive WHERE PNPDeviceID='" + PNPDeviceID + "'").Get();
+            foreach (ManagementObject item in new ManagementObjectSearcher("SELECT * FROM Win32_DiskDrive WHERE PNPDeviceID='" + PNPDeviceID + "'").Get())
+            {
+                foreach (ManagementObject item2 in item.GetRelated("Win32_DiskPartition"))
+                {
+                    foreach (ManagementObject item3 in item2.GetRelated("Win32_LogicalDisk"))
+                    {
+                        driveType = item3["DriveType"]==null? default(DriveType) : (DriveType)Enum.Parse(typeof(DriveType), item3["DriveType"].ToString());
+                    }
+                }
+            }
+            return driveType;
         }
         #endregion
 
