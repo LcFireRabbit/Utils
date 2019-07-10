@@ -145,10 +145,24 @@ namespace Utils.WDeviceManagement.WMI
             ///用来判断U盘上线
             if (text.StartsWith("USBSTOR\\"))
             {
-                DriveType driverType= UsbDeviceInfo.WMI_GetDiskType(dependent);
+                DriveType driverType = UsbDeviceInfo.WMI_GetDiskType(dependent);
 
-                USBInserted?.Invoke(this, new UsbStorageCreatEventArgs(text, dependent));
+                if (ReferenceEquals(driverType, DriveType.Removable))
+                {
+                    USBInserted?.Invoke(this, new UsbStorageCreatEventArgs(text, dependent));
 
+                }
+                else
+                {
+                    ///卸载或者禁用设备
+                }
+            }
+            ///其他usb设备
+            else
+            {
+                ///得到他的guid 判断是鼠标类，还是键盘类
+                ///查询user的配置，看当前设备是否支持使用键盘或者鼠标
+                ///支持，直接无作为；不支持，禁用所有该类型设备。
             }
         }
     }
