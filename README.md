@@ -131,4 +131,13 @@
     public static void ScanForHardWareChanges() 
     ```
     
-    - 禁用U盘(注册表)
+    - 禁用U盘(注册表/Regedit)Path：Utils/WDeviceManagement/Regedit/UsbStorageService.cs
+     - 禁用USB存储
+      ```C# 
+      public static void DisableUSBStorage()
+      ```
+     - 启用USB存储
+      ```C# 
+      public static void EnableUSBStorage()
+      ```
+   
