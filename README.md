@@ -36,62 +36,99 @@
                 return false;
             }
         }
-    ```
-    - USB上线设备信息查询(WMI/Cfgmgr32)
-    ```C#
         /// <summary>
-        /// 定位发生插拔的USB设备
+        /// Usb设备下线处理方法
         /// </summary>
-        /// <param name="e">USB插拔事件参数</param>
-        /// <returns>发生插拔现象的USB控制设备ID</returns>
-        public static UsbControllerDevice WhoUsbControllerDevice(EventArrivedEventArgs e)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnUSBRemoved(object sender, EventArrivedEventArgs e)
         {
-            ManagementBaseObject managementBaseObject = e.NewEvent["TargetInstance"] as ManagementBaseObject;
-            if (managementBaseObject != null && managementBaseObject.ClassPath.ClassName == "Win32_USBControllerDevice")
+            string dependent = UsbDeviceInfo.WhoUsbControllerDevice(e).Dependent;
+            string text = dependent.Replace("\\\\", "\\");
+
+            ///Usb存储类设备标志
+            if (text.StartsWith("USBSTOR\\"))
             {
-                string text = (managementBaseObject["Antecedent"] as string).Split('=')[1];
-                string antecedent = text.Substring(1, text.Length - 2);
-                string text2 = (managementBaseObject["Dependent"] as string).Split('=')[1];
-                string dependent = text2.Substring(1, text2.Length - 2);
-                return new UsbControllerDevice
-                {
-                    Antecedent = antecedent,
-                    Dependent = dependent
-                };
+                UsbStorageRemoved?.Invoke(this, new UsbStorageDeleteEventArgs(text));
             }
-            return null;
         }
+
         /// <summary>
-        /// 通过得到的设备描述，来查询需要的信息
+        /// Usb设备上线处理方法
         /// </summary>
-        /// <param name="text"></param>
-        /// <param name="dependent"></param>
-        public UsbStorageCreatEventArgs(string text, string dependent)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnUSBInserted(object sender, EventArrivedEventArgs e)
         {
-                if (UsbDeviceInfo.CM_GetParentDevIDByChildDevID(text, out uint ParentDevNode, out string ParentDevID) != 0
-                    || UsbDeviceInfo.CM_GetParentDevIDByChildDevNode(ParentDevNode, out uint _, out string ParentDevID2) != 0)
+            string dependent = UsbDeviceInfo.WhoUsbControllerDevice(e).Dependent;
+            string text = dependent.Replace("\\\\", "\\");
+
+            ///Usb存储类设备标志
+            if (text.StartsWith("USBSTOR\\"))
+            {
+                UsbStorageInserted?.Invoke(this, new UsbStorageCreatEventArgs(text, dependent));
+            }
+            else if (text.StartsWith("HID\\"))
+            {
+                PnPEntityInfo[] pnPEntityInfos = UsbDeviceInfo.WhoPnPEntity(text);
+
+                for (int i = 0; !(pnPEntityInfos == null) && i < pnPEntityInfos.Length; i++)
                 {
-                    return;
-                }
-                int num = UsbDeviceInfo.CM_GetDevNodeAddress(ParentDevNode);
-                if (num != -1)
-                {
-                    if (text.StartsWith("USBSTOR\\"))
+                    ///通过guid去判定当前上线设备是什么类别的设备
+                    if (pnPEntityInfos[i].ClassGuid == Mouse)
                     {
-                        StringCollection logicalDiskCollection = UsbDeviceInfo.WMI_GetLogicalDrives(dependent);
-                        UsbPath = logicalDiskCollection[0] + "\\";
+                        HIDMouseInserted?.Invoke(this, pnPEntityInfos[i]);
                     }
-                    
-                    UsbDevNode = ParentDevNode;
-                    UsbDevID = ParentDevID;
-                    UsbHubDevID = ParentDevID2;
-                    ConnectionIndex = num;
-                    ServerID = text;
+                    else if (pnPEntityInfos[i].ClassGuid == Keyboard)
+                    {
+                        HIDKeyboardInserted?.Invoke(this, pnPEntityInfos[i]);
+                    }
                 }
-         }
+            }
+        }
     ```
- - 设备管理(SetupDi)
-    - 查询设备信息
-    - 禁用设备
-    - 卸载设备
+    - USB上线设备信息查询(WMI/Cfgmgr32)(具体代码见项目)
+    ```C#
+        /// 定位发生插拔的USB设备
+        public static UsbControllerDevice WhoUsbControllerDevice(EventArrivedEventArgs e)
+        
+        /// 根据设备ID定位设备
+        public static PnPEntityInfo[] WhoPnPEntity(String PNPDeviceID)
+        
+        /// 得到当前可移动存储设备的盘符
+        public static StringCollection WMI_GetDiskRoot(string PNPDeviceID)
+        
+        /// 得到当前移动存储设备的类型
+        public static DriveType WMI_GetDiskType(string PNPDeviceID)
+    ```
+ - 设备管理(SetupDi) Path：Utils/WDeviceManagement/SetupDi/SetupDiExtension.cs
+    - 禁用HID鼠标类设备,重插,新设备均无效. 
+    ```C# 
+    public static void DisableMouse()
+    ```
+    - 启用HID鼠标类设备 
+    ```C# 
+    public static void EnableMouse()
+    ```
+    - 禁用指定设备(BY pnpDeviceId 前提设备可以禁用) 
+    ```C# 
+    public static bool DisableDeviceByPnpDeviceId(string pnpDeviceId) 
+    ```
+    - 启用指定设备(BY pnpDeviceId) 
+    ```C# 
+    public static bool EnableDeviceByPnpDeviceId(string pnpDeviceId) 
+    ```
+    - 卸载HID键盘设备(键盘无法禁用) 
+    ```C# 
+    public static void UnloadKeyboard() 
+    ```
+    - 卸载指定设备(BY pnpDeviceId)
+    ```C# 
+    public static bool UnloadDeviceByPnpDeviceId(string pnpDeviceId) 
+    ```
+    - 实现设备管理器扫描检测硬件改动功能(用来实现加载已卸载设备) 
+    ```C# 
+    public static void ScanForHardWareChanges() 
+    ```
+    
     - 禁用U盘(注册表)
