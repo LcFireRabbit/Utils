@@ -155,7 +155,7 @@ namespace Utils.WDeviceManagement.WMI
             string dependent = UsbDeviceInfo.WhoUsbControllerDevice(e).Dependent;
             string text = dependent.Replace("\\\\", "\\");
 
-            ///用来判断U盘下线
+            ///Usb存储类设备标志
             if (text.StartsWith("USBSTOR\\"))
             {
                 UsbStorageRemoved?.Invoke(this, new UsbStorageDeleteEventArgs(text));
@@ -172,6 +172,7 @@ namespace Utils.WDeviceManagement.WMI
             string dependent = UsbDeviceInfo.WhoUsbControllerDevice(e).Dependent;
             string text = dependent.Replace("\\\\", "\\");
 
+            ///Usb存储类设备标志
             if (text.StartsWith("USBSTOR\\"))
             {
                 UsbStorageInserted?.Invoke(this, new UsbStorageCreatEventArgs(text, dependent));
@@ -182,6 +183,7 @@ namespace Utils.WDeviceManagement.WMI
 
                 for (int i = 0; !(pnPEntityInfos == null) && i < pnPEntityInfos.Length; i++)
                 {
+                    ///通过guid去判定当前上线设备是什么类别的设备
                     if (pnPEntityInfos[i].ClassGuid == Mouse)
                     {
                         HIDMouseInserted?.Invoke(this, pnPEntityInfos[i]);

@@ -48,6 +48,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WDeviceManagement\Cfgmgr32\Cfgmgr32Base.cs" />
     <Compile Include="WDeviceManagement\Cfgmgr32\Cfgmgr32Extension.cs" />
+    <Compile Include="WDeviceManagement\Regedit\UsbStorageService.cs" />
     <Compile Include="WDeviceManagement\SetupDi\SetupDiBase.cs" />
     <Compile Include="WDeviceManagement\SetupDi\SetupDiExtension.cs" />
     <Compile Include="WDeviceManagement\WMI\UsbDeviceInfo.cs" />
