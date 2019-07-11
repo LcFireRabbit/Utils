@@ -101,8 +101,13 @@
         /// 得到当前移动存储设备的类型
         public static DriveType WMI_GetDiskType(string PNPDeviceID)
     ```
- - 设备管理(SetupDi)
-    - 查询设备信息
-    - 禁用设备
-    - 卸载设备
+ - 设备管理(SetupDi) Path：Utils/WDeviceManagement/SetupDi/SetupDiExtension.cs
+    - 禁用HID鼠标类设备,重插,新设备均无效. ```C# public static void DisableMouse() ```
+    - 启用HID鼠标类设备 ```C# public static void EnableMouse() ```
+    - 禁用指定设备(BY pnpDeviceId 前提设备可以禁用) ```C# public static bool DisableDeviceByPnpDeviceId(string pnpDeviceId) ```
+    - 启用指定设备(BY pnpDeviceId) ```C# public static bool EnableDeviceByPnpDeviceId(string pnpDeviceId) ```
+    - 卸载HID键盘设备(键盘无法禁用) ```C# public static void UnloadKeyboard() ```
+    - 卸载指定设备(BY pnpDeviceId) ```C# public static bool UnloadDeviceByPnpDeviceId(string pnpDeviceId) ```
+    - 实现设备管理器扫描检测硬件改动功能(用来实现加载已卸载设备) ```C# public static void ScanForHardWareChanges() ```
+    
     - 禁用U盘(注册表)
