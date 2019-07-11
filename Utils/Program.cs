@@ -16,6 +16,8 @@ namespace Utils
 
             Console.ReadLine();
 
+            //SetupDiExtension.ScanForHardWareChanges();
+
             //SetupDiExtension.ChangeMouseState(SetupDiExtension.State.ENABLE);
 
             Dispose();
@@ -30,27 +32,51 @@ namespace Utils
 
             _usbDeviceWatcher.AddUSBEventWatcher();
 
-            _usbDeviceWatcher.USBInserted += UsbInsertedHandler;
+            _usbDeviceWatcher.UsbStorageInserted += UsbStorageInsertedHandler;
 
-            _usbDeviceWatcher.USBRemoved += UsbRemovedHandler;
+            _usbDeviceWatcher.UsbStorageRemoved += UsbStorageRemovedHandler;
+
+            _usbDeviceWatcher.HIDMouseInserted += HIDMouseInsertedHandler;
+
+            _usbDeviceWatcher.HIDKeyboardInserted += HIDKeyboardInsertedHadnler;
         }
 
         /// <summary>
-        /// 下线处理事件
+        /// HID键盘上线
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private static void UsbRemovedHandler(object sender, UsbDeviceWatcher.UsbStorageDeleteEventArgs e)
+        private static void HIDKeyboardInsertedHadnler(object sender, PnPEntityInfo e)
         {
 
         }
 
         /// <summary>
-        /// 上线处理事件
+        /// HID鼠标上线
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private static void UsbInsertedHandler(object sender, UsbDeviceWatcher.UsbStorageCreatEventArgs e)
+        private static void HIDMouseInsertedHandler(object sender, PnPEntityInfo e)
+        {
+
+        }
+
+        /// <summary>
+        /// Usb存储设备下线处理事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void UsbStorageRemovedHandler(object sender, UsbDeviceWatcher.UsbStorageDeleteEventArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// Usb存储设备上线处理事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void UsbStorageInsertedHandler(object sender, UsbDeviceWatcher.UsbStorageCreatEventArgs e)
         {
 
         }
