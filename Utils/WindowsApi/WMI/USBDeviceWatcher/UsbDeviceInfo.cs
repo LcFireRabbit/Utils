@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Management;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Utils.WDeviceManagement.WMI
+namespace Utils.WindowsApi
 {
     /// <summary>
     /// 即插即用设备信息结构
@@ -492,7 +490,7 @@ namespace Utils.WDeviceManagement.WMI
                 {
                     foreach (ManagementObject item3 in item2.GetRelated("Win32_LogicalDisk"))
                     {
-                        stringCollection.Add(item3["Name"] as string);
+                        stringCollection.Add((item3["Name"] as string) + "\\");
                     }
                 }
             }
@@ -506,7 +504,7 @@ namespace Utils.WDeviceManagement.WMI
         /// <returns></returns>
         public static DriveType WMI_GetDiskType(string PNPDeviceID)
         {
-            DriveType driveType=default(DriveType);
+            DriveType driveType = default(DriveType);
             var list = new ManagementObjectSearcher("SELECT * FROM Win32_DiskDrive WHERE PNPDeviceID='" + PNPDeviceID + "'").Get();
             foreach (ManagementObject item in new ManagementObjectSearcher("SELECT * FROM Win32_DiskDrive WHERE PNPDeviceID='" + PNPDeviceID + "'").Get())
             {
@@ -514,7 +512,7 @@ namespace Utils.WDeviceManagement.WMI
                 {
                     foreach (ManagementObject item3 in item2.GetRelated("Win32_LogicalDisk"))
                     {
-                        driveType = item3["DriveType"]==null? default(DriveType) : (DriveType)Enum.Parse(typeof(DriveType), item3["DriveType"].ToString());
+                        driveType = item3["DriveType"] == null ? default(DriveType) : (DriveType)Enum.Parse(typeof(DriveType), item3["DriveType"].ToString());
                     }
                 }
             }

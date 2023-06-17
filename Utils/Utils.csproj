@@ -67,6 +67,29 @@
     <Compile Include="WindowsApi\ScreenSharing\AttendeeDisConnectEventArgs.cs" />
     <Compile Include="WindowsApi\ScreenSharing\AttendeeInfo.cs" />
     <Compile Include="WindowsApi\ScreenSharing\ScreenSharing.cs" />
+    <Compile Include="WindowsApi\Theme\Theme.cs" />
+    <Compile Include="WindowsApi\Win32\Advapi32\Advapi32Base.cs" />
+    <Compile Include="WindowsApi\Win32\Advapi32\Advapi32Extension.cs" />
+    <Compile Include="WindowsApi\Win32\Common\ExecuteResult.cs" />
+    <Compile Include="WindowsApi\Win32\Common\Win32ErrorCodes.cs" />
+    <Compile Include="WindowsApi\Win32\Kernel32\Kernel32Base.cs" />
+    <Compile Include="WindowsApi\Win32\Kernel32\Kernel32Extension.cs" />
+    <Compile Include="WindowsApi\Win32\User32\User32Base.cs" />
+    <Compile Include="WindowsApi\Win32\User32\User32Extension.cs" />
+    <Compile Include="WindowsApi\Win32\Winmm\WinmmBase.cs" />
+    <Compile Include="WindowsApi\Win32\Winmm\WinmmExtension.cs" />
+    <Compile Include="WindowsApi\Win32\Wlanapi\WlanapiBase.cs" />
+    <Compile Include="WindowsApi\Win32\Wlanapi\WlanapiBase.Enums.cs" />
+    <Compile Include="WindowsApi\Win32\Wlanapi\WlanapiBase.Struct.cs" />
+    <Compile Include="WindowsApi\WLAN\IWlan.cs" />
+    <Compile Include="WindowsApi\WLAN\WlanHelpers.cs" />
+    <Compile Include="WindowsApi\WLAN\WlanInterface.cs" />
+    <Compile Include="WindowsApi\WLAN\WlanManager.cs" />
+    <Compile Include="WindowsApi\WLAN\WlanNotificationStructs.cs" />
+    <Compile Include="WindowsApi\WMI\Drive\Drive.cs" />
+    <Compile Include="WindowsApi\WMI\Monitor\Monitor.cs" />
+    <Compile Include="WindowsApi\WMI\USBDeviceWatcher\UsbDeviceInfo.cs" />
+    <Compile Include="WindowsApi\WMI\USBDeviceWatcher\UsbDeviceWatcher.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

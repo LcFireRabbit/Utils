@@ -1,8 +1,9 @@
-# Windows的基础功能的代码实现
+# Windows的基础功能实现
 
 > **Windows设备管理器**
  - USB设备
     - USB设备上线监测(WMI)
+    
     ```C#
         /// <summary>
         /// 添加USB设备监视
@@ -15,19 +16,19 @@
                 var scope = new ManagementScope("root\\CIMV2");
                 var insert = new WqlEventQuery("__InstanceCreationEvent", TimeSpan.FromSeconds(1), "TargetInstance isa 'Win32_USBControllerDevice'");
                 var remove = new WqlEventQuery("__InstanceDeletionEvent", TimeSpan.FromSeconds(1), "TargetInstance isa 'Win32_USBControllerDevice'");
-
+    
                 _insertWatcher = new ManagementEventWatcher(scope, insert);
                 _removeWatcher = new ManagementEventWatcher(scope, remove);
-
+    
                 ///WMI服务USB加载响应事件
                 _insertWatcher.EventArrived += OnUSBInserted;
                 ///WMI服务USB移除响应事件
                 _removeWatcher.EventArrived += OnUSBRemoved;
-
+    
                 ///开启监听
                 _insertWatcher.Start();
                 _removeWatcher.Start();
-
+    
                 return true;
             }
             catch (Exception)
@@ -45,14 +46,14 @@
         {
             string dependent = UsbDeviceInfo.WhoUsbControllerDevice(e).Dependent;
             string text = dependent.Replace("\\\\", "\\");
-
+    
             ///Usb存储类设备标志
             if (text.StartsWith("USBSTOR\\"))
             {
                 UsbStorageRemoved?.Invoke(this, new UsbStorageDeleteEventArgs(text));
             }
         }
-
+    
         /// <summary>
         /// Usb设备上线处理方法
         /// </summary>
@@ -62,7 +63,7 @@
         {
             string dependent = UsbDeviceInfo.WhoUsbControllerDevice(e).Dependent;
             string text = dependent.Replace("\\\\", "\\");
-
+    
             ///Usb存储类设备标志
             if (text.StartsWith("USBSTOR\\"))
             {
@@ -71,7 +72,7 @@
             else if (text.StartsWith("HID\\"))
             {
                 PnPEntityInfo[] pnPEntityInfos = UsbDeviceInfo.WhoPnPEntity(text);
-
+    
                 for (int i = 0; !(pnPEntityInfos == null) && i < pnPEntityInfos.Length; i++)
                 {
                     ///通过guid去判定当前上线设备是什么类别的设备
@@ -140,4 +141,4 @@
       ```C# 
       public static void EnableUSBStorage()
       ```
-   
+
