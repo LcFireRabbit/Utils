@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
+using System.Linq;
 using System.Management;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Utils.WDeviceManagement.WMI
+namespace Utils.WindowsApi
 {
     public class UsbDeviceWatcher
     {
@@ -18,11 +22,11 @@ namespace Utils.WDeviceManagement.WMI
         private static readonly Guid Mouse = new Guid("{4d36e96f-e325-11ce-bfc1-08002be10318}");
 
         /// <summary>
-        /// USB设备上线
+        /// USB存储设备上线
         /// </summary>
         public event EventHandler<UsbStorageCreatEventArgs> UsbStorageInserted;
         /// <summary>
-        /// USB设备下线
+        /// USB存储设备下线
         /// </summary>
         public event EventHandler<UsbStorageDeleteEventArgs> UsbStorageRemoved;
 
@@ -93,13 +97,16 @@ namespace Utils.WDeviceManagement.WMI
         /// <summary>
         /// 单例模式
         /// </summary>
-        private UsbDeviceWatcher() { }
+        private UsbDeviceWatcher()
+        {
+            AddUSBEventWatcher();
+        }
 
         /// <summary>
         /// 添加USB设备监视
         /// </summary>
         /// <returns></returns>
-        public bool AddUSBEventWatcher()
+        private bool AddUSBEventWatcher()
         {
             try
             {
@@ -193,6 +200,39 @@ namespace Utils.WDeviceManagement.WMI
                         HIDKeyboardInserted?.Invoke(this, pnPEntityInfos[i]);
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// 获取U盘在线状态
+        /// </summary>
+        public bool UDiskIsOnline
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 获取键盘在线状态
+        /// </summary>
+        public bool KeyboardIsOnline
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 获取鼠标在线状态
+        /// </summary>
+        public bool MouseIsOnline
+        {
+            get
+            {
+                return false;
             }
         }
     }
