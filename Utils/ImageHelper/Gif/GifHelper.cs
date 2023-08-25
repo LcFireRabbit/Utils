@@ -22,7 +22,6 @@ namespace Utils.ImageHelper
         /// <returns></returns>
         public static bool GifToImageByAnimate(Uri gif, int gifPlaySeconds,Image imageControl,out string errorMsg)
         {
-            Storyboard board = null;
             errorMsg = string.Empty;
             //确实是GIF
             if (!gif.IsFile || !gif.AbsolutePath.EndsWith(".gif"))
@@ -53,7 +52,7 @@ namespace Utils.ImageHelper
                     //添加第一帧为图片的开始画面
                     imageControl.Source = frameList[0];
                     //循环动画
-                    board = new Storyboard
+                    Storyboard board = new Storyboard
                     {
                         RepeatBehavior = RepeatBehavior.Forever,
                         FillBehavior = FillBehavior.HoldEnd
