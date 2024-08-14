@@ -347,6 +347,18 @@ namespace Utils.WindowsApi
         {
             DoExitWindows(ExitWindows.Force | ExitWindows.LoginOff);
         }
+
+        /// <summary>
+        /// 获取当前使用的桌面壁纸的路径
+        /// </summary>
+        /// <returns></returns>
+        public static bool GetDesktopWallpaper(out string wallPaperPath)
+        {
+            StringBuilder path = new StringBuilder(200);
+            var result = SystemParametersInfo(SPI_GETDESKWALLPAPER, 200, path, 0);
+            wallPaperPath = path.ToString();
+            return result;
+        }
         #endregion
 
         #region 私有方法

@@ -21,6 +21,11 @@ namespace Utils.WindowsApi
         public const int TOKEN_ADJUST_PRIVILEGES = 0x00000020;
 
         public const string SE_SHUTDOWN_NAME = "SeShutdownPrivilege";
+
+        /// <summary>
+        /// 检索桌面壁纸的位图文件的完整路径
+        /// </summary>
+        public const uint SPI_GETDESKWALLPAPER = 0x0073;
         #endregion
 
         #region Structures
@@ -262,6 +267,17 @@ namespace Utils.WindowsApi
 
         [DllImport(User32)]
         internal static extern bool ExitWindowsEx(ExitWindows uFlags, ShutdownReason dwReason);
+
+        /// <summary>
+        /// 检索或设置系统范围参数(sting类型)
+        /// </summary>
+        /// <param name="uAction"></param>
+        /// <param name="uParam"></param>
+        /// <param name="lpvParam"></param>
+        /// <param name="init"></param>
+        /// <returns></returns>
+        [DllImport(User32, CharSet = CharSet.Auto, SetLastError = true)]
+        internal static extern bool SystemParametersInfo(uint uAction, uint uParam, StringBuilder lpvParam, uint init);
         #endregion
     }
 }
