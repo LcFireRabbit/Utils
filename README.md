@@ -1,10 +1,28 @@
 # Windows的基础功能实现
 >
-> **Windows设备管理器**
+> **Win32**
 
-- [添加USB设备监视](https://github.com/LcFireRabbit/Utils/blob/master/Utils/WindowsApi/WMI/USBDeviceWatcher/UsbDeviceWatcher.cs)
+***Advapi32Base***
+OpenProcessToken
+LookupPrivilegeValue
+AdjustTokenPrivileges
+InitializeSecurityDescriptor
+SetSecurityDescriptorDacl
 
-    ```C#
-    bool AddUSBEventWatcher()
-    ```
-    
+***Advapi32Extension***
+```
+/// <summary>
+/// 授予权限
+/// 参数取值为文件PrivilegeAPI中的类PrivilegeConstants中的字段
+/// </summary>
+/// <param name="privilegeName">PrivilegeConstants类中的字段</param>
+GrantPrivilege(string privilegeName)
+
+/// <summary>
+/// 撤销权限
+/// 参数取值为文件PrivilegeAPI中的类PrivilegeConstants中的字段
+/// </summary>
+/// <param name="privilegeName">PrivilegeConstants类中的字段</param>
+/// <returns></returns>
+RevokePrivilege(string privilegeName)
+```
