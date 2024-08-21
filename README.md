@@ -12,7 +12,7 @@ SetSecurityDescriptorDacl
 
 **_Advapi32Extension_**
 
-```C#
+```c#
 /// <summary>
 /// 授予权限
 /// 参数取值为文件PrivilegeAPI中的类PrivilegeConstants中的字段
