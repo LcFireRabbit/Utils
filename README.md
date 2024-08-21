@@ -1,15 +1,17 @@
-# Windows的基础功能实现
->
+# Windows 的基础功能实现
+
 > **Win32**
 
-***Advapi32Base***
+**_Advapi32Base_**
+
 OpenProcessToken
 LookupPrivilegeValue
 AdjustTokenPrivileges
 InitializeSecurityDescriptor
 SetSecurityDescriptorDacl
 
-***Advapi32Extension***
+**_Advapi32Extension_**
+
 ```C#
 /// <summary>
 /// 授予权限
