@@ -46,6 +46,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -72,6 +73,9 @@
     <Compile Include="WindowsApi\Win32\Common\Win32ErrorCodes.cs" />
     <Compile Include="WindowsApi\Win32\Kernel32\Kernel32Base.cs" />
     <Compile Include="WindowsApi\Win32\Kernel32\Kernel32Extension.cs" />
+    <Compile Include="WindowsApi\Win32\Shell32\Shell32Base.cs" />
+    <Compile Include="WindowsApi\Win32\Shell32\Shell32Base.Struct.cs" />
+    <Compile Include="WindowsApi\Win32\Shell32\Shell32Extension.cs" />
     <Compile Include="WindowsApi\Win32\User32\User32Base.cs" />
     <Compile Include="WindowsApi\Win32\User32\User32Extension.cs" />
     <Compile Include="WindowsApi\Win32\Winmm\WinmmBase.cs" />

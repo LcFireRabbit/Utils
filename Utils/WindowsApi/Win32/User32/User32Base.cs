@@ -278,6 +278,9 @@ namespace Utils.WindowsApi
         /// <returns></returns>
         [DllImport(User32, CharSet = CharSet.Auto, SetLastError = true)]
         internal static extern bool SystemParametersInfo(uint uAction, uint uParam, StringBuilder lpvParam, uint init);
+
+        [DllImport(User32, EntryPoint = "DestroyIcon")]
+        public static extern int DestroyIcon(IntPtr hIcon);
         #endregion
     }
 }
