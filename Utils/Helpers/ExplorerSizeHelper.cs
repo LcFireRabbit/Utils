@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Utils.ExplorerHelper
+namespace Utils.Helpers
 {
     public class ExplorerSizeHelper
     {

@@ -36,6 +36,7 @@ namespace Utils.WindowsApi
         [DllImport(Shell32)]
         public static extern uint ExtractIconEx(string lpszFile, int nIconIndex, int[] phiconLarge, int[] phiconSmall, uint nIcons);
 
-        
+        [DllImport(Shell32)]
+        public extern static int SHGetImageList(IMAGELIST_SIZE_FLAG iImageList, ref Guid riid, ref IImageList ppv);
     }
 }

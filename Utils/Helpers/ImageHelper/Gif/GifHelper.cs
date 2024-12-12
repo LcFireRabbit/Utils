@@ -8,7 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 
-namespace Utils.ImageHelper
+namespace Utils.Helpers
 {
     public static class GifHelper
     {

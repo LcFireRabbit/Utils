@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Utils.CheckHelper
+namespace Utils.Helpers
 {
     public static class CheckNameHelper
     {
