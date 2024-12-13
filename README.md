@@ -1,30 +1,14 @@
-# Windows 的基础功能实现
-
-> **Win32**
-
-**_Advapi32Base_**
-
-OpenProcessToken
-LookupPrivilegeValue
-AdjustTokenPrivileges
-InitializeSecurityDescriptor
-SetSecurityDescriptorDacl
-
-**_Advapi32Extension_**
-
-```c#
-/// <summary>
-/// 授予权限
-/// 参数取值为文件PrivilegeAPI中的类PrivilegeConstants中的字段
-/// </summary>
-/// <param name="privilegeName">PrivilegeConstants类中的字段</param>
-GrantPrivilege(string privilegeName)
-
-/// <summary>
-/// 撤销权限
-/// 参数取值为文件PrivilegeAPI中的类PrivilegeConstants中的字段
-/// </summary>
-/// <param name="privilegeName">PrivilegeConstants类中的字段</param>
-/// <returns></returns>
-RevokePrivilege(string privilegeName)
-```
+# 基础功能实现
+<table>
+<capital>StandardUtils</capital>
+<tr>
+<th>类名</th>
+<th>方法</th>
+<th>参数</th>
+<th>描述</th>
+<tr>
+<th>BitHelper</th>
+<th>SetBit</th>
+<th>(byte[] data, int bitIndex, bool value)</th>
+<th>传入指定字节数组,Bit的指定位置和对应值</th>
+</table>
