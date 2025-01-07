@@ -29,5 +29,28 @@ namespace Standard.Helpers
                 data[byteIndex] &= (byte)~(1 << bitPosition);
             }
         }
+
+        public static byte SetBit(byte data, int bitIndex, bool value)
+        {
+            if (bitIndex < 0 || bitIndex >= 8)
+            {
+                throw new ArgumentException("Invalid parameters.");
+            }
+
+            if (value)
+            {
+                // Set the bit at bitPosition in data[byteIndex]
+                data |= (byte)(1 << bitIndex);
+            }
+            else
+            {
+                // Clear the bit at bitPosition in data[byteIndex]
+                data &= (byte)~(1 << bitIndex);
+            }
+
+            return data;
+        }
+
+
     }
 }
