@@ -19,5 +19,17 @@ namespace StandardUnitTest
             data2 = Standard.Helpers.BitHelper.SetBit(data2, 0, true);
             Assert.That(data2, Is.EqualTo(0x01));
         }
+
+        [Test]
+        public void GetBit()
+        {
+            byte[] data1 = [0x00, 0x00];
+            bool result = Standard.Helpers.BitHelper.GetBit(data1, 8);
+            Assert.That(result, Is.EqualTo(false));
+
+            byte data2 = 0x00;
+            result = Standard.Helpers.BitHelper.GetBit(data2, 0);
+            Assert.That(result, Is.EqualTo(false));
+        }
     }
 }

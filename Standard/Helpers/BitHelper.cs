@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -51,6 +52,28 @@ namespace Standard.Helpers
             return data;
         }
 
+        public static bool GetBit(byte[] data, int bitIndex)
+        {
+            if (data == null || bitIndex < 0 || bitIndex >= data.Length * 8)
+            {
+                throw new ArgumentException("Invalid parameters.");
+            }
 
+            int byteIndex = bitIndex / 8;
+            int bitPosition = bitIndex % 8;
+
+            return GetBit(data[byteIndex], bitPosition);
+        }
+
+        public static bool GetBit(byte data, int bitIndex)
+        {
+            if (bitIndex < 0 || bitIndex >= 8)
+            {
+                throw new ArgumentException("Invalid parameters.");
+            }
+
+            bool bit = (data & (1 << bitIndex)) != 0;
+            return bit;
+        }
     }
 }
